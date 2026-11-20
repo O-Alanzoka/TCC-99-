@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Bellievie - Viagens</title>
+
+    <link rel="stylesheet" href="viagensG.css" />
+</head>
+
+<body>
+    <div class="app">
+        <!-- =========================
+         MENU LATERAL
+    ========================== -->
+
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>BELLIEVIE</h1>
+                <span>GERENTE</span>
+            </div>
+
+            <nav class="menu">
+                <a href="Dashboard.html" class="menu-item">
+                    <span class="icon">▦</span>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="eventosG2.html" class="menu-item">
+                    <span class="icon">▤</span>
+                    <span>Eventos</span>
+                </a>
+
+                <a href="viagensG.html" class="menu-item active">
+                    <span class="icon plane">✈</span>
+                    <span>Viagens</span>
+                </a>
+
+                <a href="Gastos.html" class="menu-item">
+                    <span class="icon">R$</span>
+                    <span>Gastos</span>
+                </a>
+
+                <a href="visitasG.html" class="menu-item">
+                    <span class="icon">◉</span>
+                    <span>Visitas</span>
+                </a>
+
+                <a href="Relatorios.html" class="menu-item">
+                    <span class="icon">▥</span>
+                    <span>Relatórios</span>
+                </a>
+
+                <a href="equipeG.html" class="menu-item">
+                    <span class="icon">♟</span>
+                    <span>Equipe</span>
+                </a>
+            </nav>
+
+            <div class="profile">
+                <div class="profile-avatar">G</div>
+
+                <div>
+                    <strong>Gerente</strong>
+                    <small>Usuário corporativo</small>
+                </div>
+            </div>
+        </aside>
+
+        <!-- =========================
+         CONTEÚDO PRINCIPAL
+    ========================== -->
+
+        <main class="content">
+            <!-- CABEÇALHO -->
+
+            <header class="topbar">
+                <div class="page-title">
+                    <div class="title-line">
+                        <span class="plane-title">✈</span>
+
+                        <h2>Viagens</h2>
+                    </div>
+
+                    <p>Solicitações e status de viagens</p>
+                </div>
+
+                <div class="top-actions">
+                    <div class="month" id="mesAtual">Carregando mês...</div>
+
+                    <span class="today"> Hoje⌄ </span>
+
+                    <div class="user-circle">G</div>
+                </div>
+            </header>
+
+            <!-- =========================
+             CARDS
+        ========================== -->
+
+            <section class="stats">
+                <div class="stat-card">
+                    <span> Solicitações pendentes </span>
+
+                    <strong id="totalPendentes">0</strong>
+
+                    <small> Aguardando sua aprovação </small>
+                </div>
+
+                <div class="stat-card">
+                    <span> Viagens em andamento </span>
+
+                    <strong id="totalAndamento">0</strong>
+
+                    <small> Em deslocamento ou no destino </small>
+                </div>
+
+                <div class="stat-card">
+                    <span> Viagens este mês </span>
+
+                    <strong id="totalMes">0</strong>
+
+                    <small> Total de viagens </small>
+                </div>
+
+                <div class="stat-card">
+                    <span> Custo estimado no mês </span>
+
+                    <strong id="custoMes">R$ 0,00</strong>
+
+                    <small> Total estimado do mês </small>
+                </div>
+            </section>
+
+            <!-- =========================
+             VIAGENS EM ANDAMENTO
+        ========================== -->
+
+            <div id="mensagemViagens" class="trip-admin-message" role="status" aria-live="polite">Carregando solicitações...</div>
+
+            <section class="panel">
+                <h3>Viagens em andamento</h3>
+                <div class="table running-table">
+                    <div class="table-header">
+                        <span>Código</span><span>Responsável</span><span>Origem</span><span>Destino</span>
+                        <span>Motivo</span><span>Período</span><span>Transporte</span><span>Status</span>
+                    </div>
+                    <div id="viagensEmAndamento"></div>
+                </div>
+            </section>
+
+            <section class="panel">
+                <h3>Viagens aprovadas fora do período atual</h3>
+                <div class="table running-table">
+                    <div class="table-header">
+                        <span>Código</span><span>Responsável</span><span>Origem</span><span>Destino</span>
+                        <span>Motivo</span><span>Período</span><span>Transporte</span><span>Status</span>
+                    </div>
+                    <div id="outrasViagensAprovadas"></div>
+                </div>
+            </section>
+
+            <section class="panel requested">
+                <h3>Viagens solicitadas</h3>
+                <div class="table requested-table">
+                    <div class="table-header">
+                        <span>Código</span><span>Responsável</span><span>Origem</span><span>Destino</span>
+                        <span>Motivo</span><span>Período</span><span>Valor estimado</span><span>Transporte</span>
+                        <span>Status</span><span>Ações</span>
+                    </div>
+                    <div id="viagensSolicitadas"></div>
+                </div>
+            </section>
+
+            <section class="panel">
+                <h3>Solicitações recusadas</h3>
+                <div class="table requested-table">
+                    <div class="table-header">
+                        <span>Código</span><span>Responsável</span><span>Origem</span><span>Destino</span>
+                        <span>Motivo</span><span>Período</span><span>Valor estimado</span><span>Transporte</span>
+                        <span>Status</span><span>Decisão</span>
+                    </div>
+                    <div id="viagensRecusadas"></div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+    <script>
+        const mensagemViagens = document.getElementById("mensagemViagens");
+        const containerEmAndamento = document.getElementById("viagensEmAndamento");
+        const containerOutrasAprovadas = document.getElementById("outrasViagensAprovadas");
+        const containerSolicitadas = document.getElementById("viagensSolicitadas");
+        const containerRecusadas = document.getElementById("viagensRecusadas");
+        let viagens = [];
+
+        function escaparHTML(valor) {
+            return String(valor ?? "").replace(/[&<>"']/g, (caractere) => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+            })[caractere]);
+        }
+
+        function dataLocalISO() {
+            const agora = new Date();
+            const ano = agora.getFullYear();
+            const mes = String(agora.getMonth() + 1).padStart(2, "0");
+            const dia = String(agora.getDate()).padStart(2, "0");
+            return `${ano}-${mes}-${dia}`;
+        }
+
+        function formatarData(valor) {
+            if (!valor) return "—";
+            const partes = String(valor).slice(0, 10).split("-");
+            return partes.length === 3 ? `${partes[2]}/${partes[1]}/${partes[0]}` : escaparHTML(valor);
+        }
+
+        function moeda(valor) {
+            return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(valor) || 0);
+        }
+
+        function custoTotal(viagem) {
+            return Number(viagem.custo_total ?? (
+                Number(viagem.custo_passagem || 0) +
+                Number(viagem.custo_hospedagem || 0) +
+                Number(viagem.custo_transporte_local || 0)
+            ));
+        }
+
+        function periodo(viagem) {
+            return `${formatarData(viagem.data_ida)}${viagem.data_volta ? `<br>${formatarData(viagem.data_volta)}` : ""}`;
+        }
+
+        function mensagemVazia(texto, colunas) {
+            return `<div class="table-row empty-trip-row"><div>${texto}</div></div>`;
+        }
+
+        function linhaAprovada(viagem, indice, emAndamento) {
+            return `<div class="table-row">
+                <div class="flight-code">V${indice + 1}</div>
+                <div class="person"><strong>${escaparHTML(viagem.responsavel || "Funcionário")}</strong><small>Representante</small></div>
+                <div>${escaparHTML(viagem.origem)}</div>
+                <div>${escaparHTML(viagem.destino)}</div>
+                <div>${escaparHTML(viagem.motivo)}</div>
+                <div>${periodo(viagem)}</div>
+                <div>${escaparHTML(viagem.transporte)}</div>
+                <div><span class="status green">${emAndamento ? "Em andamento" : "Aprovada"}</span></div>
+            </div>`;
+        }
+
+        function linhaSolicitada(viagem, indice) {
+            const anexo = viagem.comprovante_id
+                ? `<a class="trip-attachment" href="/api/anexos/${Number(viagem.comprovante_id)}" target="_blank" rel="noopener">Comprovante</a>`
+                : "";
+            return `<div class="table-row">
+                <div class="flight-code">V${indice + 1}</div>
+                <div class="person"><strong>${escaparHTML(viagem.responsavel || "Funcionário")}</strong><small>Representante</small></div>
+                <div>${escaparHTML(viagem.origem)}</div>
+                <div>${escaparHTML(viagem.destino)}</div>
+                <div>${escaparHTML(viagem.motivo)}</div>
+                <div>${periodo(viagem)}</div>
+                <div>${moeda(custoTotal(viagem))}</div>
+                <div>${escaparHTML(viagem.transporte)}</div>
+                <div><span class="status yellow">Pendente</span></div>
+                <div class="buttons">
+                    <button class="accept" type="button" data-id="${Number(viagem.id)}" data-decisao="aprovada">Aceitar</button>
+                    <button class="reject" type="button" data-id="${Number(viagem.id)}" data-decisao="recusada">Recusar</button>
+                    ${anexo}
+                </div>
+            </div>`;
+        }
+
+        function linhaRecusada(viagem, indice) {
+            return `<div class="table-row">
+                <div class="flight-code">V${indice + 1}</div>
+                <div class="person"><strong>${escaparHTML(viagem.responsavel || "Funcionário")}</strong><small>Representante</small></div>
+                <div>${escaparHTML(viagem.origem)}</div>
+                <div>${escaparHTML(viagem.destino)}</div>
+                <div>${escaparHTML(viagem.motivo)}</div>
+                <div>${periodo(viagem)}</div>
+                <div>${moeda(custoTotal(viagem))}</div>
+                <div>${escaparHTML(viagem.transporte)}</div>
+                <div><span class="status red">Recusada</span></div>
+                <div class="decision-done">${escaparHTML(viagem.justificativa || "Sem justificativa")}</div>
+            </div>`;
+        }
+
+        function renderizarViagens() {
+            const hoje = dataLocalISO();
+            const mesAtual = hoje.slice(0, 7);
+            const pendentes = viagens.filter((v) => v.status === "pendente");
+            const aprovadas = viagens.filter((v) => v.status === "aprovada");
+            const recusadas = viagens.filter((v) => v.status === "recusada");
+            const emAndamento = aprovadas.filter((v) => v.data_ida <= hoje && (v.data_volta || v.data_ida) >= hoje);
+            const outrasAprovadas = aprovadas.filter((v) => !emAndamento.includes(v));
+            const doMes = viagens.filter((v) => String(v.data_ida).slice(0, 7) === mesAtual);
+            const custoDoMes = doMes.reduce((total, v) => total + custoTotal(v), 0);
+
+            document.getElementById("totalPendentes").textContent = pendentes.length;
+            document.getElementById("totalAndamento").textContent = emAndamento.length;
+            document.getElementById("totalMes").textContent = doMes.length;
+            document.getElementById("custoMes").textContent = moeda(custoDoMes);
+            document.getElementById("mesAtual").textContent = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric" }).format(new Date());
+
+            containerEmAndamento.innerHTML = emAndamento.length ? emAndamento.map((v, i) => linhaAprovada(v, i, true)).join("") : mensagemVazia("Nenhuma viagem em andamento hoje.", 8);
+            containerOutrasAprovadas.innerHTML = outrasAprovadas.length ? outrasAprovadas.map((v, i) => linhaAprovada(v, i, false)).join("") : mensagemVazia("Nenhuma outra viagem aprovada.", 8);
+            containerSolicitadas.innerHTML = pendentes.length ? pendentes.map(linhaSolicitada).join("") : mensagemVazia("Nenhuma solicitação aguardando decisão.", 10);
+            containerRecusadas.innerHTML = recusadas.length ? recusadas.map(linhaRecusada).join("") : mensagemVazia("Nenhuma solicitação recusada.", 10);
+        }
+
+        async function carregarViagens() {
+            mensagemViagens.textContent = "Carregando viagens...";
+            mensagemViagens.className = "trip-admin-message";
+            try {
+                const resposta = await fetch("/api/viagens", {
+                    credentials: "same-origin",
+                    headers: { Accept: "application/json" },
+                });
+                if (resposta.status === 401) {
+                    window.location.href = "/login.html";
+                    return;
+                }
+                const dados = await resposta.json();
+                if (!resposta.ok) throw new Error(dados.erro || "Não foi possível consultar as viagens.");
+                if (!Array.isArray(dados)) throw new Error("A API retornou uma lista inválida.");
+                viagens = dados;
+                renderizarViagens();
+                mensagemViagens.textContent = `${viagens.length} solicitação(ões) carregada(s).`;
+                mensagemViagens.className = "trip-admin-message success";
+            } catch (erro) {
+                mensagemViagens.textContent = erro.message;
+                mensagemViagens.className = "trip-admin-message error";
+            }
+        }
+
+        document.querySelector(".content").addEventListener("click", async(evento) => {
+            const botao = evento.target.closest("button[data-decisao]");
+            if (!botao) return;
+            const id = botao.dataset.id;
+            const decisao = botao.dataset.decisao;
+            let justificativa = "";
+            if (decisao === "recusada") {
+                justificativa = window.prompt("Informe a justificativa para recusar a viagem:") || "";
+                if (!justificativa.trim()) {
+                    window.alert("A justificativa é obrigatória para recusar a viagem.");
+                    return;
+                }
+            } else if (!window.confirm("Confirma a aprovação desta viagem?")) {
+                return;
+            }
+
+            const botoes = document.querySelectorAll(`button[data-id="${id}"]`);
+            botoes.forEach((item) => { item.disabled = true; });
+            mensagemViagens.textContent = "Registrando decisão...";
+            mensagemViagens.className = "trip-admin-message";
+            try {
+                const resposta = await fetch(`/api/viagens/${id}/decisao`, {
+                    method: "PATCH",
+                    credentials: "same-origin",
+                    headers: { "Content-Type": "application/json", Accept: "application/json" },
+                    body: JSON.stringify({ decisao, justificativa }),
+                });
+                const resultado = await resposta.json();
+                if (resposta.status === 401) {
+                    window.location.href = "/login.html";
+                    return;
+                }
+                if (!resposta.ok) throw new Error(resultado.erro || "Não foi possível registrar a decisão.");
+                await carregarViagens();
+            } catch (erro) {
+                mensagemViagens.textContent = erro.message;
+                mensagemViagens.className = "trip-admin-message error";
+                botoes.forEach((item) => { item.disabled = false; });
+            }
+        });
+
+        carregarViagens();
+    </script>
+</body>
+
+</html>

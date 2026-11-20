@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Gastos - Bellievie Gerente</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="gastos.css">
+</head>
+
+<body>
+    <aside class="side">
+        <div class="brand"><b>BELLIEVIE</b><small>GERENTE</small></div>
+        <nav>
+            <div class="item">
+                <span class="icon">▦</span> <a href="Dashboard.html">Dashboard</a>
+            </div>
+            <div class="item"><span class="icon">▤</span>
+                <a href="eventosG2.html">Eventos</a></div>
+            <div class="item"><span class="icon plane">✈</span>
+                <a href="viagensG.html">Viagens</a></div>
+            <div class="item active"><span class="icon">R$</span>
+                <a href="Gastos.html">Gastos</a></div>
+            <div class="item"><span class="icon">◉</span>
+                <a href="visitasG.html">Visitas</a></div>
+            <div class="item"><span class="icon">▥</span>
+                <a href="Relatorios.html">Relatórios</a></div>
+            <div class="item"><span class="icon">♟</span>
+                <a href="equipeG.html">Equipe</a></div>
+                    </nav>
+        <div class="user">
+            <div class="avatar">G</div>
+            <div><b>Gerente</b><span>Usuário corporativo</span></div>
+        </div>
+    </aside>
+
+    <main>
+        <h1>Gastos</h1>
+        <section class="card">
+            <h2>Estimativas de viagens e gastos informados</h2>
+            <p id="mensagemGastos" class="expenses-message" role="status" aria-live="polite">Carregando registros...</p>
+            <div class="grid head">
+                <div class="c1">Data</div>
+                <div class="c2">Descrição</div>
+                <div class="c3">Responsável</div>
+                <div class="c4">Valor (R$)</div>
+                <div class="c6">Status do registro</div>
+            </div>
+            <div class="rows" id="rows"></div>
+        </section>
+    </main>
+
+    <script>
+        const linhasGastos = document.getElementById("rows");
+        const mensagemGastos = document.getElementById("mensagemGastos");
+
+        function escaparHTML(valor) {
+            return String(valor ?? "").replace(/[&<>"']/g, (caractere) => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+            })[caractere]);
+        }
+
+        function formatarData(valor) {
+            if (!valor) return "—";
+            const partes = String(valor).slice(0, 10).split("-");
+            return partes.length === 3 ? `${partes[2]}/${partes[1]}` : escaparHTML(valor);
+        }
+
+        function moeda(valor) {
+            return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(valor) || 0);
+        }
+
+        function renderizarGastos(registros) {
+            if (!registros.length) {
+                linhasGastos.innerHTML = '<p class="expenses-empty">Ainda não há viagens ou relatórios com valores registrados.</p>';
+                return;
+            }
+            linhasGastos.innerHTML = registros.map((registro) => {
+                const eViagem = registro.tipo === "viagem";
+                const classe = registro.status === "aprovada" ? "ok" : registro.status === "pendente" ? "an" : "pe";
+                const status = eViagem
+                    ? registro.status === "aprovada" ? "Viagem aprovada" : registro.status === "recusada" ? "Viagem recusada" : "Viagem pendente"
+                    : "Informado em relatório";
+                const descricao = `${eViagem ? "Viagem" : "Relatório"}: ${registro.descricao}`;
+                return `<div class="grid row">
+                    <div class="d">${formatarData(registro.data)}</div>
+                    <div class="m">${escaparHTML(descricao)}</div>
+                    <div class="f">${escaparHTML(registro.responsavel)}</div>
+                    <div class="v">${moeda(registro.valor)}</div>
+                    <div class="s"><span class="pill ${classe}">${status}</span></div>
+                </div>`;
+            }).join("");
+        }
+
+        async function carregarGastos() {
+            try {
+                const resposta = await fetch("/api/gastos", {
+                    credentials: "same-origin",
+                    headers: { Accept: "application/json" },
+                });
+                if (resposta.status === 401) {
+                    window.location.href = "/login.html";
+                    return;
+                }
+                const dados = await resposta.json();
+                if (!resposta.ok) throw new Error(dados.erro || "Não foi possível consultar os registros.");
+                if (!Array.isArray(dados)) throw new Error("A API retornou uma lista inválida.");
+                renderizarGastos(dados);
+                mensagemGastos.textContent = `${dados.length} registro(s) encontrado(s). Os valores de viagens são estimativas; os demais vêm dos relatórios enviados.`;
+                mensagemGastos.className = "expenses-message success";
+            } catch (erro) {
+                linhasGastos.innerHTML = '<p class="expenses-empty">Não foi possível carregar os registros.</p>';
+                mensagemGastos.textContent = erro.message;
+                mensagemGastos.className = "expenses-message error";
+            }
+        }
+
+        carregarGastos();
+    </script>
+</body>
+
+</html>

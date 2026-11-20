@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bellievie · Relatório</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="relatorio.css">
+
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="brand">
+                <strong>BELLIEVIE</strong>
+                <span>REPRESENTANTE</span>
+            </div>
+            <nav class="menu" id="menu">
+                <a href="dashboarda.html" class="">
+                    <svg width="15" height="15" viewBox="0 0 16 16"><path d="M2.5 2.5h11v11h-11zM2.5 8h11M8 2.5v11"/></svg> Dashboard
+                </a>
+                <a href="eventos.html" class="">
+                    <svg width="15" height="15" viewBox="0 0 16 16"><path d="M2.5 2.5h11v11h-11zM2.5 6h11M2.5 9.5h11"/></svg> Eventos
+                </a>
+                <a href="relatorio.html" class="active" aria-current="page">
+                    <svg width="15" height="15" viewBox="0 0 16 16"><path d="M2.5 3.5h11v9h-11zM8 3.5v9"/></svg> Relatórios
+                </a>
+                <a href="calendario.html" class="gap">
+                    <svg width="15" height="15" viewBox="0 0 16 16"><path d="M3 3h10v10H3z"/></svg> Calendário
+                </a>
+                <a href="viagem.html" class="">
+                    <svg width="20" height="20" viewBox="0 0 24 24" class="fill"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg> Viagens
+                </a>
+                <a href="visitas.html" class="">
+                    <svg width="15" height="15" viewBox="0 0 16 16"><path d="M2.5 2.5h11v11h-11zM2.5 6h11M2.5 9.5h11"/></svg> visitas
+                </a>
+                <hr>
+            </nav>
+            <div class="profile">
+                <div class="photo">
+                    <svg width="36" height="36" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#8d9a94"/><circle cx="16" cy="12.5" r="5.5" fill="#1b2b24"/><path d="M5.5 27c1.5-6 5.5-8 10.5-8s9 2 10.5 8c-3 3-6.5 4.5-10.5 4.5S8.5 30 5.5 27z" fill="#1b2b24"/></svg>
+                </div>
+                <div>
+                    <b>Representante</b>
+                    <small>Usuário corporativo</small>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CONTEÚDO -->
+        <main class="main">
+
+            <div class="title">
+                <h1>Relatório</h1>
+            </div>
+            <form class="content form" id="f">
+                <h2 style="margin-bottom:2px">Informações do relatório</h2>
+                <div class="row a">
+                    <div class="f"><label for="nome">Nome do evento</label><input id="nome" name="nome_evento" maxlength="150" required></div>
+                    <div class="f"><label for="data">Data</label><input id="data" name="data_relatorio" type="date" required></div>
+                </div>
+                <div class="row a">
+                    <div class="f"><label for="rel">Evento relacionado</label><input id="rel" name="evento_relacionado" maxlength="150"></div>
+                    <div class="f"><label for="func">Funcionário</label><input id="func" name="funcionario" readonly placeholder="Carregando usuário..."></div>
+                </div>
+                <div class="f grow"><label for="resumo">Resumo</label><textarea id="resumo" name="resumo" maxlength="4000" required></textarea></div>
+                <div class="row b">
+                    <div class="f"><label for="gastos">Gastos do evento</label><input id="gastos" name="gastos" type="number" min="0" step="0.01" value="0" required></div>
+                    <div class="f"><label for="contatos">Contatos realizados</label><input id="contatos" name="contatos" type="number" min="0" step="1" value="0" required></div>
+                </div>
+                <div class="f grow" style="flex:1.3"><label for="acao">Ação / Resultado detalhado</label><textarea id="acao" name="acao_resultado" maxlength="5000"></textarea></div>
+                <div class="row c">
+                    <div class="f"><span class="lb">Foto / Comprovante</span><label class="upload" for="foto" id="lf">Selecionar arquivo</label><input id="foto" name="foto" type="file" accept="application/pdf,image/jpeg,image/png,image/webp" hidden></div>
+                    <div class="f"><span class="lb">Anexos</span><label class="upload" for="anexos" id="la">Selecionar arquivos</label><input id="anexos" name="anexos" type="file" accept="application/pdf,image/jpeg,image/png,image/webp" multiple hidden></div>
+                </div>
+                <div id="mensagemRelatorio" class="report-message" role="status" aria-live="polite"></div>
+                <div class="actions"><button class="btn" type="submit" id="btnEnviarRelatorio">Enviar relatório</button></div>
+            </form>
+        </main>
+    </div>
+    <script>
+        const formRelatorio = document.getElementById("f");
+        const inputFoto = document.getElementById("foto");
+        const inputAnexos = document.getElementById("anexos");
+        const mensagemRelatorio = document.getElementById("mensagemRelatorio");
+        const botaoEnviarRelatorio = document.getElementById("btnEnviarRelatorio");
+        const campoFuncionario = document.getElementById("func");
+        let nomeFuncionario = "";
+
+        function mostrarMensagem(texto, tipo = "") {
+            mensagemRelatorio.textContent = texto;
+            mensagemRelatorio.className = `report-message ${tipo}`.trim();
+        }
+
+        function atualizarRotulos() {
+            const foto = inputFoto.files[0];
+            document.getElementById("lf").textContent = foto ? foto.name : "Selecionar arquivo";
+            const quantidade = inputAnexos.files.length;
+            document.getElementById("la").textContent = quantidade
+                ? `${quantidade} arquivo(s) selecionado(s)`
+                : "Selecionar arquivos";
+        }
+
+        function arquivoParaBase64(arquivo) {
+            return new Promise((resolve, reject) => {
+                const leitor = new FileReader();
+                leitor.onload = () => resolve(String(leitor.result).split(",")[1] || "");
+                leitor.onerror = () => reject(new Error(`Não foi possível ler ${arquivo.name}.`));
+                leitor.readAsDataURL(arquivo);
+            });
+        }
+
+        async function carregarFuncionario() {
+            try {
+                const resposta = await fetch("/api/usuario-atual", {
+                    credentials: "same-origin",
+                    headers: { Accept: "application/json" },
+                });
+                if (resposta.status === 401) {
+                    window.location.href = "/login.html";
+                    return;
+                }
+                const usuario = await resposta.json();
+                if (!resposta.ok) throw new Error(usuario.erro || "Não foi possível identificar o funcionário.");
+                nomeFuncionario = usuario.nome || "Funcionário";
+                campoFuncionario.value = nomeFuncionario;
+            } catch (erro) {
+                mostrarMensagem(erro.message, "error");
+            }
+        }
+
+        inputFoto.addEventListener("change", atualizarRotulos);
+        inputAnexos.addEventListener("change", atualizarRotulos);
+
+        formRelatorio.addEventListener("submit", async(evento) => {
+            evento.preventDefault();
+            const arquivosSelecionados = [];
+            if (inputFoto.files[0]) arquivosSelecionados.push({ arquivo: inputFoto.files[0], categoria: "foto" });
+            Array.from(inputAnexos.files).forEach((arquivo) => arquivosSelecionados.push({ arquivo, categoria: "anexo" }));
+
+            if (arquivosSelecionados.length > 5) {
+                mostrarMensagem("Envie no máximo 5 arquivos por relatório.", "error");
+                return;
+            }
+            const tamanhoTotal = arquivosSelecionados.reduce((total, item) => total + item.arquivo.size, 0);
+            if (arquivosSelecionados.some((item) => item.arquivo.size > 5 * 1024 * 1024) || tamanhoTotal > 10 * 1024 * 1024) {
+                mostrarMensagem("Cada arquivo pode ter até 5 MB e o conjunto de anexos até 10 MB.", "error");
+                return;
+            }
+
+            botaoEnviarRelatorio.disabled = true;
+            mostrarMensagem("Enviando relatório e anexos...");
+            try {
+                const dados = {
+                    nome_evento: document.getElementById("nome").value.trim(),
+                    data_relatorio: document.getElementById("data").value,
+                    evento_relacionado: document.getElementById("rel").value.trim(),
+                    resumo: document.getElementById("resumo").value.trim(),
+                    gastos: Number(document.getElementById("gastos").value || 0),
+                    contatos: Number(document.getElementById("contatos").value || 0),
+                    acao_resultado: document.getElementById("acao").value.trim(),
+                    anexos: [],
+                };
+
+                for (const item of arquivosSelecionados) {
+                    dados.anexos.push({
+                        categoria: item.categoria,
+                        nome: item.arquivo.name,
+                        tipoMime: item.arquivo.type,
+                        conteudoBase64: await arquivoParaBase64(item.arquivo),
+                    });
+                }
+
+                const resposta = await fetch("/api/relatorios", {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: { "Content-Type": "application/json", Accept: "application/json" },
+                    body: JSON.stringify(dados),
+                });
+                const resultado = await resposta.json();
+                if (resposta.status === 401) {
+                    window.location.href = "/login.html";
+                    return;
+                }
+                if (!resposta.ok) throw new Error(resultado.erro || "Não foi possível enviar o relatório.");
+
+                formRelatorio.reset();
+                campoFuncionario.value = nomeFuncionario;
+                atualizarRotulos();
+                mostrarMensagem(resultado.mensagem || "Relatório enviado com sucesso.", "success");
+            } catch (erro) {
+                mostrarMensagem(erro.message, "error");
+            } finally {
+                botaoEnviarRelatorio.disabled = false;
+            }
+        });
+
+        carregarFuncionario();
+    </script>
+</body>
+
+</html>

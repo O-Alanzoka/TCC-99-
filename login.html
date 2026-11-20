@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="login.css">
+    <title>Login</title>
+</head>
+
+<body>
+    <section class="ladoE">
+        <button onclick="history.back()" class="voltar">←</button>
+        <div class="cima">
+            <div class="cabecalho">
+            <h1 class="textos">Bellievie</h1>
+            <p class="textos">Gestão inteligente de gestão e visitas</p>
+            </div>
+        </div>
+        <div>
+            <img src="katchau.jfif" alt="imagem">
+        </div>
+    </section>
+    <img>
+    <section class="ladoD">
+        <main class="container">
+
+
+
+
+    <form action="/login" method="POST">
+    <h1>Login</h1>
+
+    <div class="lg">
+        <input
+            placeholder="Usuário"
+            type="email"
+            name="email"
+            required>
+    </div>
+
+    <div class="lg">
+        <input
+            placeholder="Senha"
+            type="password"
+            name="senha"
+            required>
+    </div>
+
+    <div class="senha">
+        <label>
+            <input type="checkbox">
+            lembrar a senha
+        </label>
+    </div>
+
+    <button type="submit">Login</button>
+</form>
+
+
+
+
+    </main>
+    </section>
+</body>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const formulario = document.querySelector(
+        'form[action="/login"], form[action$="/login"]'
+    );
+
+    if (!formulario) return;
+
+    const botao = formulario.querySelector(
+        'button[type="submit"], button:not([type]), input[type="submit"]'
+    );
+
+    if (!botao) return;
+
+    const ehInput = botao.tagName.toLowerCase() === "input";
+    const textoOriginal = ehInput ? botao.value : botao.textContent;
+
+    let bloqueado = false;
+
+    formulario.addEventListener("submit", (evento) => {
+        if (bloqueado) {
+            evento.preventDefault();
+            return;
+        }
+
+        bloqueado = true;
+        let segundos = 10;
+
+        botao.disabled = true;
+
+        const atualizarTexto = () => {
+            const texto = `Aguarde ${segundos}s`;
+
+            if (ehInput) {
+                botao.value = texto;
+            } else {
+                botao.textContent = texto;
+            }
+        };
+
+        atualizarTexto();
+
+        const intervalo = setInterval(() => {
+            segundos--;
+
+            if (segundos <= 0) {
+                clearInterval(intervalo);
+                bloqueado = false;
+                botao.disabled = false;
+
+                if (ehInput) {
+                    botao.value = textoOriginal;
+                } else {
+                    botao.textContent = textoOriginal;
+                }
+
+                return;
+            }
+
+            atualizarTexto();
+        }, 1000);
+    });
+});
+</script>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos | Bellievie Gerente</title>
+    <link rel="stylesheet" href="eventosG2.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <a class="brand" href="Dashboard.html" aria-label="Bellievie início">
+                <span class="brand-name">BELLIEVIE</span>
+                <span class="brand-role">GERENTE</span>
+            </a>
+
+            <nav class="main-nav" aria-label="Menu principal">
+                <a class="nav-link" href="Dashboard.html">
+                    <span class="nav-icon" aria-hidden="true">▦</span><span>Dashboard</span>
+                </a>
+                <a class="nav-link active" href="eventosG2.html" aria-current="page">
+                    <span class="nav-icon" aria-hidden="true">▤</span><span>Eventos</span>
+                </a>
+                <a class="nav-link" href="viagensG.html">
+                    <span class="nav-icon plane" aria-hidden="true">✈</span><span>Viagens</span>
+                </a>
+                <a class="nav-link" href="Gastos.html">
+                    <span class="nav-icon" aria-hidden="true">R$</span><span>Gastos</span>
+                </a>
+                <a class="nav-link" href="visitasG.html">
+                    <span class="nav-icon" aria-hidden="true">◉</span><span>Visitas</span>
+                </a>
+                <a class="nav-link" href="Relatorios.html">
+                    <span class="nav-icon" aria-hidden="true">▥</span><span>Relatórios</span>
+                </a>
+                <a class="nav-link" href="equipeG.html">
+                    <span class="nav-icon" aria-hidden="true">♟</span><span>Equipe</span>
+                </a>
+            </nav>
+
+                <div class="profile">
+                <div class="profile-avatar" aria-hidden="true">G</div>
+                <div class="profile-copy">
+                    <strong>Gerente</strong>
+                    <span>Usuário corporativo</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="page-header">
+                <div>
+                    <p class="eyebrow">GERENCIAMENTO</p>
+                    <h1>Eventos</h1>
+                    <p class="page-description">Consulte os eventos cadastrados e confira seus detalhes.</p>
+                </div>
+                <div class="event-count"><span class="count-dot"></span> <span id="contadorEventos">Carregando eventos...</span></div>
+            </header>
+
+            <div id="mensagemEventos" class="event-message" role="status" aria-live="polite">Carregando solicitações...</div>
+            <section class="events-list" id="listaEventosGerente" aria-label="Lista de eventos">
+                <p class="event-empty">Carregando eventos...</p>
+            </section>
+
+            <footer class="page-footer">Bellievie • Área do gerente</footer>
+        </main>
+    </div>
+
+    <script>
+        const listaEventosGerente = document.getElementById("listaEventosGerente");
+        const contadorEventos = document.getElementById("contadorEventos");
+        const mensagemEventos = document.getElementById("mensagemEventos");
+
+        function escaparHTML(valor) {
+            return String(valor ?? "").replace(/[&<>"']/g, (caractere) => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+            })[caractere]);
+        }
+
+        function dataEventoFormatada(valor) {
+            if (!valor) return "Não informada";
+            const partes = String(valor).slice(0, 10).split("-");
+            return partes.length === 3 ? `${partes[2]}/${partes[1]}/${partes[0]}` : escaparHTML(valor);
+        }
+
+        function statusEvento(status) {
+            if (status === "aprovado") return "Aprovado";
+            if (status === "reprovado") return "Reprovado";
+            return "Pendente";
+        }
+
+        function renderizarEventosGerente(eventos) {
+            const pendentes = eventos.filter((evento) => evento.status_aprovacao === "pendente").length;
+            contadorEventos.textContent = `${eventos.length} evento(s) · ${pendentes} pendente(s)`;
+
+            if (!eventos.length) {
+                listaEventosGerente.innerHTML = '<p class="event-empty">Nenhuma solicitação de evento foi recebida.</p>';
+                return;
+            }
+
+            listaEventosGerente.innerHTML = eventos.map((evento) => {
+                const status = evento.status_aprovacao;
+                const pendente = status === "pendente";
+                const responsavel = evento.responsavel || "Funcionário não identificado";
+                return `
+                    <details class="event-card" ${pendente ? "open" : ""}>
+                        <summary class="event-summary">
+                            <span class="event-check" aria-hidden="true">${status === "aprovado" ? "✓" : status === "reprovado" ? "×" : "•"}</span>
+                            <span class="event-title">${escaparHTML(evento.titulo)} — ${escaparHTML(responsavel)}</span>
+                            <span class="event-status ${escaparHTML(status)}">${statusEvento(status)}</span>
+                            <span class="expand-icon" aria-hidden="true">⌄</span>
+                        </summary>
+                        <div class="event-details">
+                            <div class="detail-item"><span class="detail-label">RESPONSÁVEL</span><span class="detail-value">${escaparHTML(responsavel)}</span></div>
+                            <div class="detail-item"><span class="detail-label">DATA</span><span class="detail-value">${dataEventoFormatada(evento.data_evento)}</span></div>
+                            <div class="detail-item"><span class="detail-label">HORÁRIO</span><span class="detail-value">${escaparHTML(evento.horario || "Não informado")}</span></div>
+                            <div class="detail-item"><span class="detail-label">LOCAL</span><span class="detail-value">${escaparHTML(evento.local)}</span></div>
+                            <div class="detail-item detail-wide"><span class="detail-label">DESCRIÇÃO</span><span class="detail-value">${escaparHTML(evento.descricao || "Nenhuma descrição informada.")}</span></div>
+                            <div class="detail-item detail-wide"><span class="detail-label">JUSTIFICATIVA DA DECISÃO</span><span class="detail-value">${escaparHTML(evento.justificativa || "Ainda não há decisão registrada.")}</span></div>
+                            ${pendente ? `
+                                <div class="event-actions">
+                                    <button class="event-action approve" type="button" data-id="${Number(evento.id)}" data-decisao="aprovado">Aprovar</button>
+                                    <button class="event-action reject" type="button" data-id="${Number(evento.id)}" data-decisao="reprovado">Reprovar</button>
+                                </div>` : ""}
+                        </div>
+                    </details>`;
+            }).join("");
+        }
+
+        async function carregarEventosGerente() {
+            mensagemEventos.textContent = "Carregando solicitações...";
+            mensagemEventos.className = "event-message";
+            try {
+                const resposta = await fetch("/api/eventos", {
+                    credentials: "same-origin",
+                    headers: { Accept: "application/json" },
+                });
+                if (resposta.status === 401) {
+                    window.location.href = "/login.html";
+                    return;
+                }
+                const dados = await resposta.json();
+                if (!resposta.ok) throw new Error(dados.erro || "Não foi possível carregar os eventos.");
+                if (!Array.isArray(dados)) throw new Error("A API retornou uma lista inválida.");
+                renderizarEventosGerente(dados);
+                mensagemEventos.textContent = dados.length ? "Solicitações atualizadas." : "Aguardando a primeira solicitação de evento.";
+                mensagemEventos.className = "event-message success";
+            } catch (erro) {
+                contadorEventos.textContent = "Não foi possível carregar";
+                listaEventosGerente.innerHTML = '<p class="event-empty">Não foi possível carregar os eventos.</p>';
+                mensagemEventos.textContent = erro.message;
+                mensagemEventos.className = "event-message error";
+            }
+        }
+
+        listaEventosGerente.addEventListener("click", async(evento) => {
+            const botao = evento.target.closest("button[data-decisao]");
+            if (!botao) return;
+
+            const id = botao.dataset.id;
+            const decisao = botao.dataset.decisao;
+            let justificativa = "";
+
+            if (decisao === "reprovado") {
+                justificativa = window.prompt("Informe a justificativa da reprovação:") || "";
+                if (!justificativa.trim()) {
+                    window.alert("A justificativa é obrigatória para reprovar o evento.");
+                    return;
+                }
+            } else if (!window.confirm("Confirma a aprovação deste evento?")) {
+                return;
+            }
+
+            const botoes = listaEventosGerente.querySelectorAll(`button[data-id="${id}"]`);
+            botoes.forEach((item) => { item.disabled = true; });
+            mensagemEventos.textContent = "Registrando decisão...";
+            mensagemEventos.className = "event-message";
+
+            try {
+                const resposta = await fetch(`/api/eventos/${id}/decisao`, {
+                    method: "PATCH",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    },
+                    body: JSON.stringify({ decisao, justificativa }),
+                });
+                const resultado = await resposta.json();
+                if (resposta.status === 401) {
+                    window.location.href = "/login.html";
+                    return;
+                }
+                if (!resposta.ok) throw new Error(resultado.erro || "Não foi possível registrar a decisão.");
+                mensagemEventos.textContent = resultado.mensagem;
+                mensagemEventos.className = "event-message success";
+                await carregarEventosGerente();
+            } catch (erro) {
+                mensagemEventos.textContent = erro.message;
+                mensagemEventos.className = "event-message error";
+                botoes.forEach((item) => { item.disabled = false; });
+            }
+        });
+
+        carregarEventosGerente();
+    </script>
+
+</body>
+
+</html>

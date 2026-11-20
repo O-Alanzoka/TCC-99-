@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bellievie - Equipe</title>
+    <link rel="stylesheet" href="equipe.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- Barra lateral -->
+        <aside class="sidebar">
+
+            <div class="brand">
+                <h2>BELLIEVIE</h2>
+                <span>GERENTE</span>
+            </div>
+
+            <nav class="navigation">
+                <a href="Dashboard.html" class="nav-item">
+                    <span class="nav-icon">▦</span>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="eventosG2.html" class="nav-item">
+                    <span class="nav-icon">▤</span>
+                    <span>Eventos</span>
+                </a>
+
+                <a href="viagensG.html" class="nav-item">
+                    <span class="nav-icon plane">✈</span>
+                    <span>Viagens</span>
+                </a>
+
+                <a href="Gastos.html" class="nav-item">
+                    <span class="nav-icon">R$</span>
+                    <span>Gastos</span>
+                </a>
+                <a href="visitasG.html" class="nav-item">
+                    <span class="nav-icon">◉</span>
+                    <span>Visitas</span>
+                </a>
+                <a href="Relatorios.html" class="nav-item">
+                    <span class="nav-icon">▥</span>
+                    <span>Relatórios</span>
+                </a>
+
+                <a href="equipeG.html" class="nav-item active">
+                    <span class="nav-icon">♟</span>
+                    <span>Equipe</span>
+                </a>
+            </nav>
+
+            <div class="user-profile">
+                <div class="user-avatar">G</div>
+
+                <div class="user-info">
+                    <strong>Gerente</strong>
+                    <span>Usuário corporativo</span>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- Conteúdo principal -->
+        <main class="main-content">
+
+            <header class="page-header">
+                <h1>Equipe</h1>
+                <strong class="total-representatives" id="totalRepresentantes">
+                    Carregando representantes...
+                </strong>
+            </header>
+
+            <p id="mensagemEquipe" class="team-message" role="status" aria-live="polite">Consultando equipe...</p>
+            <section class="team-regions single-region">
+                <article class="region-card">
+                    <h2>Representantes cadastrados</h2>
+                    <div class="representatives" id="listaRepresentantes">
+                        <p class="team-empty">Carregando...</p>
+                    </div>
+                </article>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const listaRepresentantes = document.getElementById("listaRepresentantes");
+        const totalRepresentantes = document.getElementById("totalRepresentantes");
+        const mensagemEquipe = document.getElementById("mensagemEquipe");
+
+        function escaparHTML(valor) {
+            return String(valor ?? "").replace(/[&<>"']/g, (caractere) => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+            })[caractere]);
+        }
+
+        function iniciais(nome) {
+            return String(nome || "?").trim().split(/\s+/).slice(0, 2).map((parte) => parte[0] || "").join("").toUpperCase();
+        }
+
+        async function carregarEquipe() {
+            try {
+                const resposta = await fetch("/api/equipe", {
+                    credentials: "same-origin",
+                    headers: { Accept: "application/json" },
+                });
+                if (resposta.status === 401) {
+                    window.location.href = "/login.html";
+                    return;
+                }
+                if (resposta.status === 403) throw new Error("Você não tem permissão para consultar a equipe.");
+                const dados = await resposta.json();
+                if (!resposta.ok) throw new Error(dados.erro || "Não foi possível consultar a equipe.");
+                totalRepresentantes.textContent = `${dados.total} representante(s)`;
+                if (!dados.representantes.length) {
+                    listaRepresentantes.innerHTML = '<p class="team-empty">Nenhum representante cadastrado.</p>';
+                } else {
+                    listaRepresentantes.innerHTML = dados.representantes.map((pessoa) => `
+                        <div class="representative">
+                            <span class="representative-avatar">${escaparHTML(iniciais(pessoa.nome))}</span>
+                            <span class="representative-copy">
+                                <strong>${escaparHTML(pessoa.nome)}</strong>
+                                <small>${escaparHTML(pessoa.email)}</small>
+                            </span>
+                        </div>`).join("");
+                }
+                mensagemEquipe.textContent = "Equipe atualizada com os usuários cadastrados no sistema.";
+                mensagemEquipe.className = "team-message success";
+            } catch (erro) {
+                totalRepresentantes.textContent = "Não disponível";
+                listaRepresentantes.innerHTML = '<p class="team-empty">Não foi possível carregar os representantes.</p>';
+                mensagemEquipe.textContent = erro.message;
+                mensagemEquipe.className = "team-message error";
+            }
+        }
+
+        carregarEquipe();
+    </script>
+</body>
+
+</html>

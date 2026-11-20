@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Relatórios - Bellievie Gerente</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="relatorios.css">
+
+</head>
+
+<body>
+    <aside class="side">
+        <div class="brand"><b>BELLIEVIE</b><small>GERENTE</small></div>
+        <nav>
+            <div class="item"><span class="icon">▦</span><a href="Dashboard.html">Dashboard</a></div>
+            <div class="item"><span class="icon">▤</span><a href="eventosG2.html">Eventos</a></div>
+            <div class="item"><span class="icon plane">✈</span><a href="viagensG.html">Viagens</a></div>
+            <div class="item"><span class="icon">R$</span><a href="Gastos.html">Gastos</a></div>
+            <div class="item"><span class="icon">◉</span><a href="visitasG.html">Visitas</a></div>
+            <div class="item active"><span class="icon">▥</span><a href="Relatorios.html">Relatórios</a></div>
+            <div class="item"><span class="icon">♟</span><a href="equipeG.html">Equipe</a></div>
+                    </nav>
+        <div class="user">
+            <div class="avatar">G</div>
+            <div><b>Gerente</b><span>Usuário corporativo</span></div>
+        </div>
+    </aside>
+
+    <main>
+        <h1>Relatórios</h1>
+        <p id="mensagemRelatorios" class="report-list-message" role="status" aria-live="polite">Carregando relatórios...</p>
+        <div class="list" id="list"><p class="report-empty">Carregando relatórios...</p></div>
+    </main>
+
+    <script>
+        const listaRelatorios = document.getElementById("list");
+        const mensagemRelatorios = document.getElementById("mensagemRelatorios");
+
+        function escaparHTML(valor) {
+            return String(valor ?? "").replace(/[&<>"']/g, (caractere) => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+            })[caractere]);
+        }
+
+        function formatarData(valor) {
+            if (!valor) return "Não informada";
+            const partes = String(valor).slice(0, 10).split("-");
+            return partes.length === 3 ? `${partes[2]}/${partes[1]}/${partes[0]}` : escaparHTML(valor);
+        }
+
+        function moeda(valor) {
+            return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(valor) || 0);
+        }
+
+        function campo(rotulo, valor) {
+            return `<div class="f"><label>${escaparHTML(rotulo)}</label><span>${escaparHTML(valor || "Não informado")}</span></div>`;
+        }
+
+        function linksAnexos(relatorio, categoria) {
+            const anexos = (relatorio.anexos || []).filter((anexo) => anexo.categoria === categoria);
+            if (!anexos.length) return "Nenhum arquivo enviado.";
+            return anexos.map((anexo) =>
+                `<a class="report-file-link" href="/api/anexos/${Number(anexo.id)}" target="_blank" rel="noopener">${escaparHTML(anexo.nome_original)}</a>`
+            ).join("");
+        }
+
+        function renderizarRelatorios(relatorios) {
+            if (!relatorios.length) {
+                listaRelatorios.innerHTML = '<p class="report-empty">Nenhum relatório foi enviado até o momento.</p>';
+                return;
+            }
+
+            listaRelatorios.innerHTML = relatorios.map((relatorio) => {
+                const responsavel = relatorio.responsavel || "Funcionário";
+                return `<div class="rep">
+                    <button class="bar" type="button" aria-expanded="false">
+                        <span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="#0a5a43" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span>
+                        <span class="t">${escaparHTML(responsavel)} — ${escaparHTML(relatorio.nome_evento)}</span>
+                        <span class="btn">↓</span>
+                    </button>
+                    <div class="body">
+                        <div class="grid">
+                            ${campo("Nome do evento", relatorio.nome_evento)}
+                            ${campo("Data", formatarData(relatorio.data_relatorio))}
+                            ${campo("Funcionário", responsavel)}
+                            ${campo("Evento relacionado", relatorio.evento_relacionado)}
+                            ${campo("Gastos do evento", moeda(relatorio.gastos))}
+                            ${campo("Contatos realizados", String(relatorio.contatos ?? 0))}
+                        </div>
+                        <div class="full">${campo("Resumo", relatorio.resumo)}</div>
+                        <div class="full">${campo("Ação / resultado detalhado", relatorio.acao_resultado)}</div>
+                        <div class="grid full">
+                            <div class="f"><label>Foto / comprovante</label><span class="report-file-list">${linksAnexos(relatorio, "foto")}</span></div>
+                            <div class="f"><label>Anexos</label><span class="report-file-list">${linksAnexos(relatorio, "anexo")}</span></div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join("");
+        }
+
+        async function carregarRelatorios() {
+            mensagemRelatorios.textContent = "Consultando relatórios...";
+            mensagemRelatorios.className = "report-list-message";
+            try {
+                const resposta = await fetch("/api/relatorios", {
+                    credentials: "same-origin",
+                    headers: { Accept: "application/json" },
+                });
+                if (resposta.status === 401) {
+                    window.location.href = "/login.html";
+                    return;
+                }
+                const dados = await resposta.json();
+                if (!resposta.ok) throw new Error(dados.erro || "Não foi possível consultar os relatórios.");
+                if (!Array.isArray(dados)) throw new Error("A API retornou uma lista inválida.");
+                renderizarRelatorios(dados);
+                mensagemRelatorios.textContent = `${dados.length} relatório(s) encontrado(s).`;
+                mensagemRelatorios.className = "report-list-message success";
+            } catch (erro) {
+                listaRelatorios.innerHTML = '<p class="report-empty">Não foi possível carregar os relatórios.</p>';
+                mensagemRelatorios.textContent = erro.message;
+                mensagemRelatorios.className = "report-list-message error";
+            }
+        }
+
+        listaRelatorios.addEventListener("click", (evento) => {
+            const botao = evento.target.closest(".bar");
+            if (!botao) return;
+            const rep = botao.parentNode;
+            const aberto = rep.classList.toggle("open");
+            botao.setAttribute("aria-expanded", String(aberto));
+            botao.querySelector(".btn").textContent = aberto ? "↑" : "↓";
+        });
+
+        carregarRelatorios();
+    </script>
+</body>
+
+</html>

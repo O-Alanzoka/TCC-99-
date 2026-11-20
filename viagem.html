@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bellievie · Solicitar viagem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="viagem.css">
+
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="brand">
+                <strong>BELLIEVIE</strong>
+                <span>REPRESENTANTE</span>
+            </div>
+            <nav class="menu" id="menu">
+                <a href="dashboarda.html" class="">
+                    <svg width="15" height="15" viewBox="0 0 16 16"><path d="M2.5 2.5h11v11h-11zM2.5 8h11M8 2.5v11"/></svg> Dashboard
+                </a>
+                <a href="eventos.html" class="">
+                    <svg width="15" height="15" viewBox="0 0 16 16"><path d="M2.5 2.5h11v11h-11zM2.5 6h11M2.5 9.5h11"/></svg> Eventos
+                </a>
+                <a href="relatorio.html" class="">
+                    <svg width="15" height="15" viewBox="0 0 16 16"><path d="M2.5 3.5h11v9h-11zM8 3.5v9"/></svg> Relatórios
+                </a>
+                <a href="calendario.html" class="gap">
+                    <svg width="15" height="15" viewBox="0 0 16 16"><path d="M3 3h10v10H3z"/></svg> Calendário
+                </a>
+                <a href="viagem.html" class="active" aria-current="page">
+                    <svg width="20" height="20" viewBox="0 0 24 24" class="fill"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg> Viagens
+                </a>
+                <a href="visitas.html" class="">
+                    <svg width="15" height="15" viewBox="0 0 16 16"><path d="M2.5 3.5h11v9h-11zM8 3.5v9"/></svg> visitas
+                </a>
+                <hr>
+            </nav>
+            <div class="profile">
+                <div class="photo">
+                    <svg width="36" height="36" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#8d9a94"/><circle cx="16" cy="12.5" r="5.5" fill="#1b2b24"/><path d="M5.5 27c1.5-6 5.5-8 10.5-8s9 2 10.5 8c-3 3-6.5 4.5-10.5 4.5S8.5 30 5.5 27z" fill="#1b2b24"/></svg>
+                </div>
+                <div>
+                    <b>Representante</b>
+                    <small>Usuário corporativo</small>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CONTEÚDO -->
+        <main class="main">
+
+            <div class="title">
+                <h1>Solicitar viagem</h1>
+            </div>
+            <form class="card" id="f">
+                <h2>Dados da viagem</h2>
+                <div class="grid3">
+                    <div class="f"><label for="origem">Origem</label><input id="origem" name="origem" maxlength="150" placeholder="Inserir" required></div>
+                    <div class="f"><label for="destino">Destino</label><input id="destino" name="destino" maxlength="150" placeholder="Inserir" required></div>
+                    <div class="f"><label for="ida">Ida</label><input id="ida" name="data_ida" type="date" required></div>
+                    <div class="f"><label for="volta">Volta</label><input id="volta" name="data_volta" type="date"></div>
+                    <div class="f"><label for="transp">Transporte</label><select id="transp" name="transporte"><option>Aéreo</option><option>Rodoviário</option><option>Carro próprio</option><option>Carro alugado</option></select></div>
+                    <div class="f"><label for="hosp">Hospedagem</label><select id="hosp" name="hospedagem"><option>Sim</option><option>Não</option></select></div>
+                    <div class="f span3"><label for="motivo">Motivo</label><input id="motivo" name="motivo" maxlength="1000" placeholder="Inserir" required></div>
+                </div>
+                <div class="mid">
+                    <div class="f"><label for="obs">Observações</label><textarea id="obs" name="observacoes" maxlength="2000" placeholder="Informações adicionais, preferências e justificativas..."></textarea></div>
+                    <label class="drop" for="comp" id="lc">COMPROVANTE / CONVITE DO EVENTO</label>
+                    <input id="comp" name="comprovante" type="file" accept="application/pdf,image/jpeg,image/png,image/webp" hidden>
+                </div>
+                <div class="custos">
+                    <h3>Estimativa de custos</h3>
+                    <div class="cost-grid">
+                        <div class="cost-field"><label for="custo_passagem">Passagem (R$)</label><input id="custo_passagem" name="custo_passagem" type="number" min="0" step="0.01" value="0" required></div>
+                        <div class="cost-field"><label for="custo_hospedagem">Hospedagem (R$)</label><input id="custo_hospedagem" name="custo_hospedagem" type="number" min="0" step="0.01" value="0" required></div>
+                        <div class="cost-field"><label for="custo_transporte_local">Transporte local (R$)</label><input id="custo_transporte_local" name="custo_transporte_local" type="number" min="0" step="0.01" value="0" required></div>
+                    </div>
+                    <div class="total"><b>Total estimado</b><strong id="tot">R$ 0,00</strong></div>
+                </div>
+                <div id="mensagemViagem" class="trip-message" role="status" aria-live="polite"></div>
+                <div class="actions">
+                    <button class="btn light" type="button" id="rasc">Salvar rascunho</button>
+                    <button class="btn" type="submit" id="btnEnviarViagem">Enviar solicitação</button>
+                </div>
+            </form>
+
+            <section class="my-trips panel" aria-labelledby="tituloMinhasViagens">
+                <div class="my-trips-heading">
+                    <div>
+                        <h2 id="tituloMinhasViagens">Minhas solicitações</h2>
+                        <p>Acompanhe a situação das viagens que você enviou.</p>
+                    </div>
+                    <button class="btn light" type="button" id="btnAtualizarViagens">Atualizar</button>
+                </div>
+                <p id="mensagemSolicitacoes" class="trip-message" role="status" aria-live="polite">Carregando solicitações...</p>
+                <div id="listaMinhasViagens" class="my-trips-list">
+                    <p class="trip-empty">Carregando...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script>
+        const formViagem = document.getElementById("f");
+        const arquivoComprovante = document.getElementById("comp");
+        const labelComprovante = document.getElementById("lc");
+        const mensagemViagem = document.getElementById("mensagemViagem");
+        const mensagemSolicitacoes = document.getElementById("mensagemSolicitacoes");
+        const listaMinhasViagens = document.getElementById("listaMinhasViagens");
+        const botaoEnviar = document.getElementById("btnEnviarViagem");
+        const chaveRascunho = "bellievie.viagem.rascunho";
+        const camposRascunho = ["origem", "destino", "data_ida", "data_volta", "transporte", "hospedagem", "motivo", "observacoes", "custo_passagem", "custo_hospedagem", "custo_transporte_local"];
+
+        function escaparHTML(valor) {
+            return String(valor ?? "").replace(/[&<>"']/g, (caractere) => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+            })[caractere]);
+        }
+
+        function moeda(valor) {
+            return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(valor) || 0);
+        }
+
+        function formatarData(valor) {
+            if (!valor) return "Não informada";
+            const partes = String(valor).slice(0, 10).split("-");
+            return partes.length === 3 ? `${partes[2]}/${partes[1]}/${partes[0]}` : escaparHTML(valor);
+        }
+
+        function mostrarMensagem(elemento, texto, tipo = "") {
+            elemento.textContent = texto;
+            elemento.className = `trip-message ${tipo}`.trim();
+        }
+
+        function atualizarTotal() {
+            const total = ["custo_passagem", "custo_hospedagem", "custo_transporte_local"]
+                .reduce((soma, id) => soma + (Number(document.getElementById(id).value) || 0), 0);
+            document.getElementById("tot").textContent = moeda(total);
+        }
+
+        function salvarRascunho() {
+            const dados = {};
+            camposRascunho.forEach((nome) => {
+                const campo = formViagem.elements[nome];
+                if (campo) dados[nome] = campo.value;
+            });
+            localStorage.setItem(chaveRascunho, JSON.stringify(dados));
+            mostrarMensagem(mensagemViagem, "Rascunho salvo neste navegador.", "success");
+        }
+
+        function restaurarRascunho() {
+            try {
+                const dados = JSON.parse(localStorage.getItem(chaveRascunho) || "{}");
+                camposRascunho.forEach((nome) => {
+                    if (dados[nome] !== undefined && formViagem.elements[nome]) {
+                        formViagem.elements[nome].value = dados[nome];
+                    }
+                });
+                atualizarTotal();
+            } catch {
+                localStorage.removeItem(chaveRascunho);
+            }
+        }
+
+        function arquivoParaBase64(arquivo) {
+            return new Promise((resolve, reject) => {
+                const leitor = new FileReader();
+                leitor.onload = () => resolve(String(leitor.result).split(",")[1] || "");
+                leitor.onerror = () => reject(new Error("Não foi possível ler o comprovante."));
+                leitor.readAsDataURL(arquivo);
+            });
+        }
+
+        async function carregarMinhasViagens() {
+            listaMinhasViagens.innerHTML = '<p class="trip-empty">Carregando solicitações...</p>';
+            try {
+                const resposta = await fetch("/api/viagens", {
+                    credentials: "same-origin",
+                    headers: { Accept: "application/json" },
+                });
+                if (resposta.status === 401) {
+                    window.location.href = "/login.html";
+                    return;
+                }
+                const viagens = await resposta.json();
+                if (!resposta.ok) throw new Error(viagens.erro || "Não foi possível consultar suas viagens.");
+                if (!Array.isArray(viagens)) throw new Error("A API retornou uma lista inválida.");
+
+                if (!viagens.length) {
+                    listaMinhasViagens.innerHTML = '<p class="trip-empty">Você ainda não enviou solicitações de viagem.</p>';
+                } else {
+                    listaMinhasViagens.innerHTML = viagens.map((viagem) => {
+                        const status = viagem.status;
+                        const statusTexto = status === "aprovada" ? "Aprovada" : status === "recusada" ? "Recusada" : "Pendente";
+                        const comprovante = viagem.comprovante_id
+                            ? `<a href="/api/anexos/${Number(viagem.comprovante_id)}" target="_blank" rel="noopener">${escaparHTML(viagem.comprovante_nome || "Abrir comprovante")}</a>`
+                            : "Não anexado";
+                        return `<article class="trip-request">
+                            <div class="trip-request-top">
+                                <strong>${escaparHTML(viagem.origem)} → ${escaparHTML(viagem.destino)}</strong>
+                                <span class="trip-status ${escaparHTML(status)}">${statusTexto}</span>
+                            </div>
+                            <div class="trip-request-meta">${formatarData(viagem.data_ida)}${viagem.data_volta ? ` a ${formatarData(viagem.data_volta)}` : ""} · ${escaparHTML(viagem.transporte)}</div>
+                            <div class="trip-request-meta">Motivo: ${escaparHTML(viagem.motivo)}</div>
+                            <div class="trip-request-meta">Estimativa: ${moeda(viagem.custo_total)}</div>
+                            <div class="trip-request-meta">Comprovante: ${comprovante}</div>
+                            ${viagem.justificativa ? `<p class="trip-justification"><strong>Justificativa:</strong> ${escaparHTML(viagem.justificativa)}</p>` : ""}
+                        </article>`;
+                    }).join("");
+                }
+                mostrarMensagem(mensagemSolicitacoes, `${viagens.length} solicitação(ões) encontrada(s).`, "success");
+            } catch (erro) {
+                listaMinhasViagens.innerHTML = '<p class="trip-empty">Não foi possível carregar suas solicitações.</p>';
+                mostrarMensagem(mensagemSolicitacoes, erro.message, "error");
+            }
+        }
+
+        arquivoComprovante.addEventListener("change", () => {
+            const arquivo = arquivoComprovante.files[0];
+            if (!arquivo) {
+                labelComprovante.textContent = "COMPROVANTE / CONVITE DO EVENTO";
+                return;
+            }
+            if (arquivo.size > 5 * 1024 * 1024) {
+                arquivoComprovante.value = "";
+                labelComprovante.textContent = "COMPROVANTE / CONVITE DO EVENTO";
+                mostrarMensagem(mensagemViagem, "O comprovante deve ter no máximo 5 MB.", "error");
+                return;
+            }
+            labelComprovante.textContent = arquivo.name;
+        });
+
+        ["custo_passagem", "custo_hospedagem", "custo_transporte_local"].forEach((id) => {
+            document.getElementById(id).addEventListener("input", atualizarTotal);
+        });
+
+        document.getElementById("rasc").addEventListener("click", salvarRascunho);
+        document.getElementById("btnAtualizarViagens").addEventListener("click", carregarMinhasViagens);
+
+        formViagem.addEventListener("submit", async(evento) => {
+            evento.preventDefault();
+            const dataIda = document.getElementById("ida").value;
+            const dataVolta = document.getElementById("volta").value;
+            if (dataVolta && dataVolta < dataIda) {
+                mostrarMensagem(mensagemViagem, "A data de volta não pode ser anterior à data de ida.", "error");
+                return;
+            }
+
+            botaoEnviar.disabled = true;
+            mostrarMensagem(mensagemViagem, "Enviando solicitação...");
+            try {
+                const dados = Object.fromEntries(new FormData(formViagem).entries());
+                delete dados.comprovante;
+                dados.custo_passagem = Number(dados.custo_passagem || 0);
+                dados.custo_hospedagem = Number(dados.custo_hospedagem || 0);
+                dados.custo_transporte_local = Number(dados.custo_transporte_local || 0);
+
+                const arquivo = arquivoComprovante.files[0];
+                if (arquivo) {
+                    if (arquivo.size > 5 * 1024 * 1024) throw new Error("O comprovante deve ter no máximo 5 MB.");
+                    dados.comprovante = {
+                        nome: arquivo.name,
+                        tipoMime: arquivo.type,
+                        conteudoBase64: await arquivoParaBase64(arquivo),
+                    };
+                }
+
+                const resposta = await fetch("/api/viagens", {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: { "Content-Type": "application/json", Accept: "application/json" },
+                    body: JSON.stringify(dados),
+                });
+                const resultado = await resposta.json();
+                if (resposta.status === 401) {
+                    window.location.href = "/login.html";
+                    return;
+                }
+                if (!resposta.ok) throw new Error(resultado.erro || "Não foi possível enviar a solicitação.");
+
+                formViagem.reset();
+                labelComprovante.textContent = "COMPROVANTE / CONVITE DO EVENTO";
+                localStorage.removeItem(chaveRascunho);
+                atualizarTotal();
+                mostrarMensagem(mensagemViagem, resultado.mensagem, "success");
+                await carregarMinhasViagens();
+            } catch (erro) {
+                mostrarMensagem(mensagemViagem, erro.message, "error");
+            } finally {
+                botaoEnviar.disabled = false;
+            }
+        });
+
+        restaurarRascunho();
+        carregarMinhasViagens();
+    </script>
+</body>
+
+</html>

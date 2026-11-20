@@ -1,0 +1,346 @@
+-
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <title>Bellievie · Dashboard</title>
+
+    <link rel="stylesheet" href="Dashboard.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- MENU LATERAL -->
+    <aside class="sidebar">
+        <a class="brand" href="#inicio" aria-label="Bellievie dashboard">
+            <span class="brand-name">BELLIEVIE</span>
+            <span class="brand-role">GERENTE</span>
+        </a>
+
+        <nav class="navigation" aria-label="Navegação principal">
+            <a class="nav-item active" href="#inicio">
+                <span class="nav-icon">▦</span> Dashboard
+            </a>
+ 
+            <a class="nav-item" href="eventosG2.html">
+                <span class="nav-icon">▤</span> Eventos
+            </a>
+ 
+            <a class="nav-item" href="viagensG.html">
+                <span class="nav-icon plane">✈</span> Viagens
+            </a>
+ 
+            <a class="nav-item" href="Gastos.html">
+                <span class="nav-icon">R$</span> Gastos
+            </a>
+ 
+            <a class="nav-item" href="visitasG.html">
+                <span class="nav-icon">◉</span> Visitas
+            </a>
+ 
+            <a class="nav-item" href="Relatorios.html">
+                <span class="nav-icon">▥</span> Relatórios
+            </a>
+ 
+ 
+            <a class="nav-item" href="equipeG.html">
+                <span class="nav-icon">♟</span> Equipe
+            </a>
+        </nav>
+
+        <!-- PERFIL DO GERENTE -->
+        <div class="sidebar-footer">
+            <div class="avatar profile-avatar">G</div>
+
+            <div class="profile-copy">
+                <span class="profile-name">Gerente</span>
+                <span class="profile-caption">Usuário corporativo</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main" id="inicio">
+        <!-- CABEÇALHO -->
+        <header class="topbar">
+            <div class="greeting">
+                <h1>Olá, Gerente</h1>
+                <p>Visão executiva da operação Bellievie</p>
+            </div>
+
+            <div class="top-actions">
+                <span class="month-chip" id="monthChip">Carregando mês...</span>
+
+                <button class="today-button" type="button" onclick="
+              document
+                .getElementById('calendario')
+                .scrollIntoView({ behavior: 'smooth' })
+            ">
+            Hoje <span>⌄</span>
+          </button>
+
+                <button class="avatar top-avatar" type="button" aria-label="Perfil do gerente">
+            G
+          </button>
+            </div>
+        </header>
+
+        <!-- RESUMO DO MÊS -->
+        <section class="summary-grid" aria-label="Resumo do mês">
+            <article class="summary-card">
+                <span class="summary-label">Eventos</span>
+                <strong class="summary-value" id="dashEventos">0</strong>
+            </article>
+
+            <article class="summary-card">
+                <span class="summary-label">Visitas</span>
+                <strong class="summary-value" id="dashVisitas">0</strong>
+            </article>
+
+            <article class="summary-card">
+                <span class="summary-label">Valores registrados</span>
+                <strong class="summary-value" id="dashInvestimentos">R$ 0,00</strong>
+            </article>
+
+            <article class="summary-card">
+                <span class="summary-label">Viagens</span>
+                <strong class="summary-value" id="dashViagens">0</strong>
+            </article>
+        </section>
+
+        <!-- EQUIPE E NOTIFICAÇÕES -->
+        <section class="middle-grid">
+            <!-- EQUIPE -->
+            <article class="panel team-panel" id="equipe">
+                <div class="panel-heading">
+                    <h2>Equipe</h2>
+                </div>
+
+                <div class="team-list" id="teamList"><p class="dashboard-empty">Carregando equipe...</p></div>
+            </article>
+
+            <!-- NOTIFICAÇÕES -->
+            <article class="panel notifications-panel">
+                <div class="panel-heading">
+                    <h2>Notificações</h2>
+                    <span class="notification-count" id="notificationCount">0</span>
+                </div>
+
+                <div class="notification-list" id="notificationList"><p class="dashboard-empty">Carregando notificações...</p></div>
+            </article>
+        </section>
+
+        <!-- CALENDÁRIO, EVENTOS E VIAGENS -->
+        <section class="bottom-grid">
+            <!-- CALENDÁRIO E PRÓXIMOS EVENTOS -->
+            <article class="panel calendar-events-panel">
+                <div class="calendar-area" id="calendario">
+                    <div class="calendar-month">
+                        <button type="button" aria-label="Mês anterior" onclick="changeMonth(-1)">
+                ‹
+              </button>
+
+                        <span id="monthLabel">Carregando mês...</span>
+
+                        <button type="button" aria-label="Próximo mês" onclick="changeMonth(1)">
+                ›
+              </button>
+                    </div>
+
+                    <div class="calendar-grid" id="calendarGrid" aria-label="Calendário mensal"></div>
+                </div>
+
+                <!-- PRÓXIMOS EVENTOS -->
+                <div class="upcoming-area" id="eventos">
+                    <h2>Próximos eventos</h2>
+
+                    <div id="upcomingEvents"><p class="dashboard-empty">Carregando próximos eventos...</p></div>
+                </div>
+            </article>
+
+            <!-- VIAGENS EM ANDAMENTO -->
+            <article class="panel trips-panel" id="viagens">
+                <div class="panel-heading">
+                    <h2>Viagens em andamento</h2>
+
+                    <a href="viagensG.html" class="see-all"> Ver todas </a>
+                </div>
+
+                <div class="trip-list" id="tripList"><p class="dashboard-empty">Carregando viagens...</p></div>
+            </article>
+        </section>
+
+        <!-- AVISO DOS BOTÕES DA EQUIPE -->
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </main>
+
+    <!-- FUNCIONALIDADES DO CALENDÁRIO E DOS BOTÕES -->
+    <script>
+        const mesesDashboard = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+        let mesExibido = new Date().getMonth();
+        let anoExibido = new Date().getFullYear();
+        let itensCalendario = [];
+
+        function escaparHTML(valor) {
+            return String(valor ?? "").replace(/[&<>"']/g, (caractere) => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+            })[caractere]);
+        }
+
+        function dataHojeISO() {
+            const agora = new Date();
+            return `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, "0")}-${String(agora.getDate()).padStart(2, "0")}`;
+        }
+
+        function formatarData(valor) {
+            if (!valor) return "—";
+            const partes = String(valor).slice(0, 10).split("-");
+            return partes.length === 3 ? `${partes[2]}/${partes[1]}/${partes[0]}` : escaparHTML(valor);
+        }
+
+        function moeda(valor) {
+            return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(valor) || 0);
+        }
+
+        async function buscarJSON(url) {
+            const resposta = await fetch(url, { credentials: "same-origin", headers: { Accept: "application/json" } });
+            if (resposta.status === 401) {
+                window.location.href = "/login.html";
+                throw new Error("Sua sessão expirou.");
+            }
+            const dados = await resposta.json();
+            if (!resposta.ok) throw new Error(dados.erro || `Falha ao consultar ${url}`);
+            return dados;
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById("calendarGrid");
+            document.getElementById("monthLabel").textContent = `${mesesDashboard[mesExibido]} ${anoExibido}`;
+            grid.innerHTML = "";
+            ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].forEach((dia) => {
+                const elemento = document.createElement("span");
+                elemento.className = "weekday";
+                elemento.textContent = dia;
+                grid.appendChild(elemento);
+            });
+            const primeiro = new Date(anoExibido, mesExibido, 1).getDay();
+            const totalDias = new Date(anoExibido, mesExibido + 1, 0).getDate();
+            const diasAnterior = new Date(anoExibido, mesExibido, 0).getDate();
+            for (let i = 0; i < 42; i++) {
+                const elemento = document.createElement("span");
+                elemento.className = "calendar-day";
+                let numero;
+                let data;
+                if (i < primeiro) {
+                    numero = diasAnterior - primeiro + i + 1;
+                    data = new Date(anoExibido, mesExibido - 1, numero);
+                    elemento.classList.add("outside");
+                } else if (i >= primeiro + totalDias) {
+                    numero = i - primeiro - totalDias + 1;
+                    data = new Date(anoExibido, mesExibido + 1, numero);
+                    elemento.classList.add("outside");
+                } else {
+                    numero = i - primeiro + 1;
+                    data = new Date(anoExibido, mesExibido, numero);
+                    if (data.toDateString() === new Date().toDateString()) elemento.classList.add("today");
+                }
+                const chave = `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, "0")}-${String(data.getDate()).padStart(2, "0")}`;
+                if (itensCalendario.some((item) => String(item.data).slice(0, 10) === chave)) elemento.classList.add("has-event");
+                elemento.textContent = numero;
+                grid.appendChild(elemento);
+            }
+        }
+
+        function changeMonth(delta) {
+            mesExibido += delta;
+            if (mesExibido < 0) { mesExibido = 11; anoExibido--; }
+            if (mesExibido > 11) { mesExibido = 0; anoExibido++; }
+            renderCalendar();
+        }
+
+        function renderizarEquipe(equipe, eventos, viagens) {
+            const pendencias = new Map();
+            [...eventos.filter((x) => x.status_aprovacao === "pendente"), ...viagens.filter((x) => x.status === "pendente")]
+                .forEach((item) => pendencias.set(item.usuario_id, (pendencias.get(item.usuario_id) || 0) + 1));
+            const container = document.getElementById("teamList");
+            if (!equipe.representantes.length) {
+                container.innerHTML = '<p class="dashboard-empty">Nenhum representante cadastrado.</p>';
+                return;
+            }
+            container.innerHTML = equipe.representantes.slice(0, 6).map((pessoa) => {
+                const iniciais = pessoa.nome.trim().split(/\s+/).slice(0, 2).map((p) => p[0]).join("").toUpperCase();
+                const total = pendencias.get(pessoa.id) || 0;
+                return `<div class="team-row">
+                    <div class="initials">${escaparHTML(iniciais)}</div>
+                    <div class="team-person"><strong>${escaparHTML(pessoa.nome)}</strong><span>Representante</span></div>
+                    <span class="pending">${total} pendência(s)</span>
+                    <a class="view-button" href="equipeG.html">Ver</a>
+                </div>`;
+            }).join("");
+        }
+
+        function renderizarNotificacoes(eventos, viagens, relatorios) {
+            const notificacoes = [
+                ...eventos.filter((x) => x.status_aprovacao === "pendente").map((x) => ({ titulo: "Evento aguardando decisão", texto: `${x.titulo} — ${x.responsavel || "Representante"}`, data: x.criado_em || x.data_evento })),
+                ...viagens.filter((x) => x.status === "pendente").map((x) => ({ titulo: "Viagem aguardando decisão", texto: `${x.origem} → ${x.destino} — ${x.responsavel || "Representante"}`, data: x.criado_em || x.data_ida })),
+                ...relatorios.slice(0, 3).map((x) => ({ titulo: "Novo relatório recebido", texto: `${x.nome_evento} — ${x.responsavel || "Representante"}`, data: x.criado_em || x.data_relatorio })),
+            ].sort((a, b) => String(b.data).localeCompare(String(a.data))).slice(0, 5);
+            document.getElementById("notificationCount").textContent = notificacoes.length;
+            document.getElementById("notificationList").innerHTML = notificacoes.length ? notificacoes.map((item) => `
+                <div class="notification"><div class="notification-top"><strong>${escaparHTML(item.titulo)}</strong><time>${formatarData(item.data)}</time></div><p>${escaparHTML(item.texto)}</p></div>`).join("") : '<p class="dashboard-empty">Nenhuma atualização pendente.</p>';
+        }
+
+        function renderizarProximosEventos(eventos) {
+            const hoje = dataHojeISO();
+            const proximos = eventos.filter((item) => item.tipo === "evento" && item.data >= hoje)
+                .sort((a, b) => a.data.localeCompare(b.data)).slice(0, 4);
+            document.getElementById("upcomingEvents").innerHTML = proximos.length ? proximos.map((item) => `
+                <div class="event-row"><div class="event-date"><strong>${String(item.data).slice(8, 10)}</strong></div>
+                <div class="event-copy"><strong>${escaparHTML(item.titulo)}</strong><span>${escaparHTML(item.horario || "Horário não informado")}</span></div>
+                <span class="event-location">${escaparHTML(item.local)}</span></div>`).join("") : '<p class="dashboard-empty">Nenhum evento futuro cadastrado.</p>';
+        }
+
+        function renderizarViagens(viagens) {
+            const hoje = dataHojeISO();
+            const emAndamento = viagens.filter((item) => item.status === "aprovada" && item.data_ida <= hoje && (item.data_volta || item.data_ida) >= hoje);
+            document.getElementById("tripList").innerHTML = emAndamento.length ? emAndamento.slice(0, 4).map((item) => `
+                <div class="trip-row"><div class="trip-copy"><strong>${escaparHTML(item.origem)} → ${escaparHTML(item.destino)}</strong><span>${formatarData(item.data_ida)}${item.data_volta ? ` - ${formatarData(item.data_volta)}` : ""}</span></div><span class="status-pill in-progress">Em andamento</span></div>`).join("") : '<p class="dashboard-empty">Nenhuma viagem em andamento.</p>';
+        }
+
+        async function carregarDashboard() {
+            try {
+                const [eventos, visitas, viagens, relatorios, equipe, calendario, gastos] = await Promise.all([
+                    buscarJSON("/api/eventos"), buscarJSON("/api/visitas"), buscarJSON("/api/viagens"),
+                    buscarJSON("/api/relatorios"), buscarJSON("/api/equipe"), buscarJSON("/api/calendario"), buscarJSON("/api/gastos"),
+                ]);
+                const hoje = dataHojeISO();
+                const mes = hoje.slice(0, 7);
+                document.getElementById("monthChip").textContent = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric" }).format(new Date());
+                document.getElementById("dashEventos").textContent = eventos.filter((x) => String(x.data_evento).slice(0, 7) === mes).length;
+                document.getElementById("dashVisitas").textContent = visitas.filter((x) => String(x.data_visita).slice(0, 7) === mes && x.status !== "cancelada").length;
+                document.getElementById("dashViagens").textContent = viagens.filter((x) => String(x.data_ida).slice(0, 7) === mes).length;
+                const investimento = gastos.filter((x) => String(x.data).slice(0, 7) === mes).reduce((soma, x) => soma + Number(x.valor || 0), 0);
+                document.getElementById("dashInvestimentos").textContent = moeda(investimento);
+                itensCalendario = calendario;
+                renderCalendar();
+                renderizarEquipe(equipe, eventos, viagens);
+                renderizarNotificacoes(eventos, viagens, relatorios);
+                renderizarProximosEventos(calendario);
+                renderizarViagens(viagens);
+            } catch (erro) {
+                document.getElementById("notificationList").innerHTML = `<p class="dashboard-empty">${escaparHTML(erro.message)}</p>`;
+            }
+        }
+
+        renderCalendar();
+        carregarDashboard();
+    </script>
+</body>
+
+</html>

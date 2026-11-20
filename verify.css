@@ -1,0 +1,176 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background: #031b15;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #061b16;
+}
+
+/* Logo */
+.B {
+    position: absolute;
+    top: 34px;
+    left: 40px;
+
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+/* Card */
+form {
+    position: absolute;
+
+    width: 520px;
+    min-height: 470px;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: #a9bab5;
+    border-radius: 18px;
+
+    padding: 55px 60px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Título */
+.VF {
+    font-size: 28px;
+    font-weight: 700;
+
+    margin-bottom: 14px;
+
+    color: #061b16;
+    text-align: center;
+}
+
+/* Texto */
+form p {
+    font-size: 13px;
+    color: #4d6c64;
+
+    margin-bottom: 42px;
+
+    text-align: center;
+}
+
+/* Texto acima do input */
+form::before {
+    content: "CÓDIGO DE 6 DÍGITOS";
+
+    font-size: 9px;
+    font-weight: 700;
+
+    color: #12866e;
+
+    margin-bottom: 12px;
+}
+
+/* Campo */
+input {
+    width: 180px;
+    height: 52px;
+
+    border: none;
+    outline: none;
+
+    background: #f1f5f3;
+
+    border-radius: 8px;
+
+    text-align: center;
+
+    font-size: 18px;
+    color: #16332c;
+
+    margin-bottom: 26px;
+
+    transition: box-shadow 0.2s ease;
+}
+
+input:focus {
+    box-shadow: 0 0 0 3px rgba(13, 139, 112, 0.25);
+}
+
+input::placeholder {
+    color: #b5c2be;
+}
+
+/* Botão */
+.botao {
+    width: 310px;
+    height: 48px;
+
+    border: none;
+    border-radius: 25px;
+
+    background: #0d8b70;
+    color: white;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease;
+}
+
+.botao:hover {
+    background: #08785f;
+}
+
+.botao:active {
+    transform: scale(0.98);
+}
+
+
+/* =========================
+   RESPONSIVIDADE
+   ========================= */
+
+@media (max-width: 600px) {
+
+    .B {
+        top: 25px;
+        left: 25px;
+        font-size: 14px;
+    }
+
+    form {
+        width: calc(100% - 40px);
+        min-height: 430px;
+
+        padding: 45px 25px;
+    }
+
+    .VF {
+        font-size: 23px;
+    }
+
+    form p {
+        font-size: 11px;
+        margin-bottom: 35px;
+    }
+
+    input {
+        width: 170px;
+        height: 50px;
+    }
+
+    .botao {
+        width: 85%;
+        height: 46px;
+    }
+}
